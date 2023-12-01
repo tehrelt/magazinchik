@@ -17,19 +17,11 @@ public partial class SneakersShopContext : DbContext
     }
 
     public virtual DbSet<Brand> Brands { get; set; }
-
     public virtual DbSet<Cloth> Cloths { get; set; }
-
     public virtual DbSet<Manufacturer> Manufacturers { get; set; }
-
-    public virtual DbSet<Photo> Photos { get; set; }
-
     public virtual DbSet<Sneaker> Sneakers { get; set; }
-
     public virtual DbSet<SneakerSize> SneakerSizes { get; set; }
-
     public virtual DbSet<SneakersPhoto> SneakersPhotos { get; set; }
-
     public virtual DbSet<ZipType> ZipTypes { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -79,18 +71,6 @@ public partial class SneakersShopContext : DbContext
             entity.Property(e => e.Name)
                 .HasMaxLength(255)
                 .HasColumnName("name");
-        });
-
-        modelBuilder.Entity<Photo>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("PRIMARY");
-
-            entity.ToTable("photo");
-
-            entity.Property(e => e.Id).HasColumnName("id");
-            entity.Property(e => e.Url)
-                .HasMaxLength(255)
-                .HasColumnName("url");
         });
 
         modelBuilder.Entity<Sneaker>(entity =>
@@ -166,17 +146,11 @@ public partial class SneakersShopContext : DbContext
 
             entity.ToTable("sneakers_photo");
 
-            entity.HasIndex(e => e.PhotoId, "photo_id");
-
             entity.HasIndex(e => e.SneakerId, "sneaker_id");
 
             entity.Property(e => e.Id).HasColumnName("id");
-            entity.Property(e => e.PhotoId).HasColumnName("photo_id");
+            entity.Property(e => e.PhotoUrl).HasColumnName("photo_url");
             entity.Property(e => e.SneakerId).HasColumnName("sneaker_id");
-
-            entity.HasOne(d => d.Photo).WithMany(p => p.SneakersPhotos)
-                .HasForeignKey(d => d.PhotoId)
-                .HasConstraintName("sneakers_photo_ibfk_2");
 
             entity.HasOne(d => d.Sneaker).WithMany(p => p.SneakersPhotos)
                 .HasForeignKey(d => d.SneakerId)

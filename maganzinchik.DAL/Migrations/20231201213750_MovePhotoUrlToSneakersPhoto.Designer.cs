@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using maganzinchik.DAL;
 
@@ -10,9 +11,11 @@ using maganzinchik.DAL;
 namespace maganzinchik.DAL.Migrations
 {
     [DbContext(typeof(SneakersShopContext))]
-    partial class SneakersShopContextModelSnapshot : ModelSnapshot
+    [Migration("20231201213750_MovePhotoUrlToSneakersPhoto")]
+    partial class MovePhotoUrlToSneakersPhoto
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
