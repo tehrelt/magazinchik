@@ -38,14 +38,14 @@ public static class Converter
             Name = z.Name
         };
     }
-    public static SneakerSizeDto ToDto(this SneakerSize s, SizeCodes code)
+    public static SneakerSizeDto ToDto(this SneakerSize s)
     {
         return new SneakerSizeDto
         {
             Id = s.Id,
-            SizeInCm = s.CmSize,
-            Size = code == SizeCodes.EU ? s.EuSize : s.UsSize,
-            SizeCode = code == SizeCodes.EU ? "EU" : "US"
+            EuSize = s.EuSize,
+            UsSize = s.UsSize,
+            CmSize = s.CmSize
         };
     }
 }
