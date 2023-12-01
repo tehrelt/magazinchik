@@ -11,7 +11,7 @@ namespace magazinchik.Controllers;
 [Route("api/v1/manufacturers")]
 public class ManufacturerController : ControllerBase
 {
-    private SneakersShopContext _context;
+    private readonly SneakersShopContext _context;
     public ManufacturerController(SneakersShopContext context)
     {
         _context = context;
@@ -36,8 +36,8 @@ public class ManufacturerController : ControllerBase
     public async Task<ActionResult<IEnumerable<ManufacturerDto>>> Get()
     {
         return await _context.Manufacturers
-            .Select(m => m.ToDto())
             .OrderBy(m => m.Id)
+            .Select(m => m.ToDto())
             .ToListAsync();
     }
 

@@ -5,30 +5,47 @@ namespace magazinchik.Converters;
 
 public static class Converter
 {
-    public static ManufacturerDto ToDto(this Manufacturer manufacturer)
+    public static ManufacturerDto ToDto(this Manufacturer m)
     {
         return new ManufacturerDto
         {
-            Id = manufacturer.Id,
-            Name = manufacturer.Name
+            Id = m.Id,
+            Name = m.Name
         };
     }
-    public static BrandDto ToDto(this Brand brand)
+    public static BrandDto ToDto(this Brand b)
     {
         return new BrandDto
         {
-            Id = brand.Id,
-            Name = brand.Name,
-            ManufacturerName = brand.Manufacturer.Name
+            Id = b.Id,
+            Name = b.Name,
+            ManufacturerName = b.Manufacturer.Name
         };
     }
-
-    public static ClothDto ToDto(this Cloth cloth)
+    public static ClothDto ToDto(this Cloth c)
     {
         return new ClothDto()
         {
-            Id = cloth.Id,
-            Name = cloth.Name
+            Id = c.Id,
+            Name = c.Name
+        };
+    }
+    public static ZipTypeDto ToDto(this ZipType z)
+    {
+        return new ZipTypeDto
+        {
+            Id = z.Id,
+            Name = z.Name
+        };
+    }
+    public static SneakerSizeDto ToDto(this SneakerSize s, SizeCodes code)
+    {
+        return new SneakerSizeDto
+        {
+            Id = s.Id,
+            SizeInCm = s.CmSize,
+            Size = code == SizeCodes.EU ? s.EuSize : s.UsSize,
+            SizeCode = code == SizeCodes.EU ? "EU" : "US"
         };
     }
 }

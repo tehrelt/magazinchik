@@ -4,6 +4,7 @@ using magazinchik.Converters;
 using magazinchik.DTOs;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using NuGet.Protocol;
 
 namespace magazinchik.Controllers;
 
@@ -11,7 +12,7 @@ namespace magazinchik.Controllers;
 [Route("api/v1/cloths")]
 public class ClothController : ControllerBase
 {
-    private SneakersShopContext _context;
+    private readonly SneakersShopContext _context;
     public ClothController(SneakersShopContext context)
     {
         _context = context;
@@ -29,15 +30,15 @@ public class ClothController : ControllerBase
 
         await _context.SaveChangesAsync();
 
-        return new IdDto {Id = cloth.Id};
+        return new IdDto { Id = cloth.Id };
     }
     
     [HttpGet]
     public async Task<ActionResult<IEnumerable<ClothDto>>> Get()
     {
         return await _context.Cloths
-            .Select(c => c.ToDto())
             .OrderBy(c => c.Id)
+            .Select(c => c.ToDto())
             .ToListAsync();
     }
 
@@ -45,13 +46,7 @@ public class ClothController : ControllerBase
     public async Task<ActionResult<ClothDto>> GetById(ulong id)
     {
         Cloth? cloth = await _context.Cloths.FindAsync(id);
-
-        if (cloth == null)
-        {
-            return NotFound();
-        }
-
-        return cloth.ToDto();
+        return cloth == null ? NotFound() : cloth.ToDto();
     }
 
     [HttpPut("{id}")]
