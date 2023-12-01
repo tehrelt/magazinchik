@@ -9,10 +9,10 @@ namespace magazinchik.Controllers;
 
 [ApiController]
 [Route("api/v1/sneaker_sizes")]
-public class SneakerSizeController : ControllerBase
+public class SneakerSizesController : ControllerBase
 {
     private readonly SneakersShopContext _context;
-    public SneakerSizeController(SneakersShopContext context)
+    public SneakerSizesController(SneakersShopContext context)
     {
         _context = context;
     }

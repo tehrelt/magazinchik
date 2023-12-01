@@ -10,13 +10,28 @@ namespace magazinchik.Controllers
 {
     [ApiController]
     [Route("api/v1/zips")]
-    public class ZipController : ControllerBase
+    public class ZipsController : ControllerBase
     {
         private readonly SneakersShopContext _context;
 
-        public ZipController(SneakersShopContext context)
+        public ZipsController(SneakersShopContext context)
         {
             _context = context;
+        }
+        
+        [HttpPost]
+        public async Task<ActionResult<IdDto>> Post([FromBody] ZipTypeInputDto dto)
+        {
+            ZipType zip = new ZipType
+            {
+                Name = dto.Name
+            };
+
+            _context.ZipTypes.Add(zip);
+
+            await _context.SaveChangesAsync();
+
+            return new IdDto {Id = zip.Id};
         }
         
         [HttpGet]
@@ -33,21 +48,6 @@ namespace magazinchik.Controllers
         {
             ZipType? zip = await _context.ZipTypes.FindAsync(id);
             return zip != null ? zip.ToDto() : NotFound();
-        }
-
-        [HttpPost]
-        public async Task<ActionResult<IdDto>> Post([FromBody] ZipTypeInputDto dto)
-        {
-            ZipType zip = new ZipType
-            {
-                Name = dto.Name
-            };
-
-            _context.ZipTypes.Add(zip);
-
-            await _context.SaveChangesAsync();
-
-            return new IdDto {Id = zip.Id};
         }
 
         [HttpPut("{id}")]

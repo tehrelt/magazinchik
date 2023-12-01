@@ -12,12 +12,12 @@ public partial class Sneaker
     public double Weight { get; set; }
 
     public ulong BrandId { get; set; }
-
-    public ulong ZipTypeId { get; set; }
-
+    
     public ulong ClothId { get; set; }
 
-    public ulong SnSizeType { get; set; }
+    public ulong SneakerSizeId { get; set; }
+    
+    public ulong ZipTypeId { get; set; }
 
     public DateTime ReleaseDate { get; set; }
 
@@ -27,7 +27,7 @@ public partial class Sneaker
 
     public virtual Cloth Cloth { get; set; } = null!;
 
-    public virtual SneakerSize SnSizeTypeNavigation { get; set; } = null!;
+    public virtual SneakerSize SneakerSize { get; set; } = null!;
 
     public virtual ICollection<SneakersPhoto> SneakersPhotos { get; } = new List<SneakersPhoto>();
 

@@ -10,10 +10,10 @@ namespace magazinchik.Controllers;
 
 [ApiController]
 [Route("api/v1/cloths")]
-public class ClothController : ControllerBase
+public class ClothesController : ControllerBase
 {
     private readonly SneakersShopContext _context;
-    public ClothController(SneakersShopContext context)
+    public ClothesController(SneakersShopContext context)
     {
         _context = context;
     }

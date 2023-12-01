@@ -9,11 +9,11 @@ namespace magazinchik.Controllers;
 
 [ApiController]
 [Route("api/v1/brands")]
-public class BrandController : ControllerBase
+public class BrandsController : ControllerBase
 {
     private readonly SneakersShopContext _context;
 
-    public BrandController(SneakersShopContext context)
+    public BrandsController(SneakersShopContext context)
     {
         _context = context;
     }

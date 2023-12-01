@@ -103,7 +103,7 @@ public partial class SneakersShopContext : DbContext
 
             entity.HasIndex(e => e.ClothId, "cloth_id");
 
-            entity.HasIndex(e => e.SnSizeType, "sn_size_type");
+            entity.HasIndex(e => e.SneakerSizeId, "sn_size_type");
 
             entity.HasIndex(e => e.ZipTypeId, "zip_type_id");
 
@@ -119,7 +119,7 @@ public partial class SneakersShopContext : DbContext
             entity.Property(e => e.ReleaseDate)
                 .HasColumnType("datetime")
                 .HasColumnName("release_date");
-            entity.Property(e => e.SnSizeType).HasColumnName("sn_size_type");
+            entity.Property(e => e.SneakerSizeId).HasColumnName("sn_size_type");
             entity.Property(e => e.Weight)
                 .HasColumnType("double(8,2)")
                 .HasColumnName("weight");
@@ -133,8 +133,8 @@ public partial class SneakersShopContext : DbContext
                 .HasForeignKey(d => d.ClothId)
                 .HasConstraintName("sneaker_ibfk_2");
 
-            entity.HasOne(d => d.SnSizeTypeNavigation).WithMany(p => p.Sneakers)
-                .HasForeignKey(d => d.SnSizeType)
+            entity.HasOne(d => d.SneakerSize).WithMany(p => p.Sneakers)
+                .HasForeignKey(d => d.SneakerSizeId)
                 .HasConstraintName("sneaker_ibfk_4");
 
             entity.HasOne(d => d.ZipType).WithMany(p => p.Sneakers)
