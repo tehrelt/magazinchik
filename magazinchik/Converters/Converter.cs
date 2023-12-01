@@ -22,4 +22,13 @@ public static class Converter
             ManufacturerName = brand.Manufacturer.Name
         };
     }
+
+    public static ClothDto ToDto(this Cloth cloth)
+    {
+        return new ClothDto()
+        {
+            Id = cloth.Id,
+            Name = cloth.Name
+        };
+    }
 }

@@ -17,6 +17,21 @@ public class ManufacturerController : ControllerBase
         _context = context;
     }
 
+    [HttpPost]
+    public async Task<ActionResult<IdDto>> Create(ManufacturerInputDto dto)
+    {
+        Manufacturer manufacturer = new Manufacturer
+        {
+            Name = dto.Name
+        };
+        
+        _context.Manufacturers.Add(manufacturer);
+
+        await _context.SaveChangesAsync();
+
+        return new IdDto { Id = manufacturer.Id };
+    }
+    
     [HttpGet]
     public async Task<ActionResult<IEnumerable<ManufacturerDto>>> Get()
     {
@@ -39,23 +54,8 @@ public class ManufacturerController : ControllerBase
         return manufacturer.ToDto();
     }
 
-    [HttpPost]
-    public async Task<ActionResult<IdDto>> Create(ManufacturerDto dto)
-    {
-        Manufacturer manufacturer = new Manufacturer
-        {
-            Name = dto.Name
-        };
-        
-        _context.Manufacturers.Add(manufacturer);
-
-        await _context.SaveChangesAsync();
-
-        return new IdDto {Id = manufacturer.Id};
-    }
-
     [HttpPut("{id}")]
-    public async Task<ActionResult> Put(ulong id, ManufacturerDto dto)
+    public async Task<ActionResult> Put(ulong id, ManufacturerInputDto dto)
     {
         Manufacturer? manufacturer = await _context.Manufacturers.FindAsync(id);
 

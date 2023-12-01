@@ -19,7 +19,7 @@ public class BrandController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult<IdDto>> Create(BrandAcceptDto dto)
+    public async Task<ActionResult<IdDto>> Create(BrandInputDto dto)
     {
         Brand brand = new Brand
         {
@@ -59,7 +59,7 @@ public class BrandController : ControllerBase
     }
 
     [HttpPut("{id}")]
-    public async Task<ActionResult> Put(ulong id, BrandAcceptDto dto)
+    public async Task<ActionResult> Put(ulong id, BrandInputDto dto)
     {
         Brand? brand = await _context.Brands.FindAsync(id);
         if (brand == null)
