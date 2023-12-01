@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 namespace magazinchik.Controllers;
 
 [ApiController]
-[Route("api/v1/[controller]")]
+[Route("api/v1/manufacturers")]
 public class ManufacturerController : ControllerBase
 {
     private SneakersShopContext _context;
@@ -20,11 +20,7 @@ public class ManufacturerController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<IEnumerable<ManufacturerDto>>> Get()
     {
-        List<ManufacturerDto> manufacturers = new List<ManufacturerDto>();
-        
-        await _context.Manufacturers.ForEachAsync(m => manufacturers.Add(m.ToDto()));
-        
-        return manufacturers;
+        return await _context.Manufacturers.Select(m => m.ToDto()).ToListAsync();
     }
 
     [HttpGet("{id}")]
@@ -39,4 +35,54 @@ public class ManufacturerController : ControllerBase
 
         return manufacturer.ToDto();
     }
+
+    [HttpPost]
+    public async Task<ActionResult<ulong>> Create(ManufacturerDto dto)
+    {
+        Manufacturer manufacturer = new Manufacturer
+        {
+            Name = dto.Name
+        };
+        
+        _context.Manufacturers.Add(manufacturer);
+
+        await _context.SaveChangesAsync();
+        
+        return manufacturer.Id;
+    }
+
+    [HttpPut("{id}")]
+    public async Task<ActionResult> Put(ulong id, ManufacturerDto dto)
+    {
+        Manufacturer? manufacturer = await _context.Manufacturers.FindAsync(id);
+
+        if (manufacturer == null)
+        {
+            return NotFound();
+        }
+        
+        manufacturer.Name = dto.Name;
+
+        await _context.SaveChangesAsync();
+        
+        return Ok();
+    }
+
+    [HttpDelete("{id}")]
+    public async Task<ActionResult> Delete(ulong id)
+    {
+        Manufacturer? manufacturer = await _context.Manufacturers.FindAsync(id);
+        if (manufacturer == null)
+        {
+            return NotFound();
+        }
+
+        _context.Manufacturers.Remove(manufacturer);
+
+        await _context.SaveChangesAsync();
+        
+        return Ok();
+    }
+    
+    
 }
