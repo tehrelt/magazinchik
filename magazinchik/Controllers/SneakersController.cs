@@ -7,6 +7,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace magazinchik.Controllers;
 
+[ApiController]
+[Route("api/v1/sneakers")]
 public class SneakersController : ControllerBase
 {
     private readonly SneakersShopContext _context;
