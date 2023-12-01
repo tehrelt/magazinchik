@@ -1,5 +1,7 @@
 using maganzinchik.DAL;
 using maganzinchik.DAL.domain;
+using magazinchik.Converters;
+using magazinchik.DTOs;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -16,21 +18,25 @@ public class ManufacturerController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<Manufacturer>>> Get()
+    public async Task<ActionResult<IEnumerable<ManufacturerDto>>> Get()
     {
-        return await _context.Manufacturers.ToListAsync();
+        List<ManufacturerDto> manufacturers = new List<ManufacturerDto>();
+        
+        await _context.Manufacturers.ForEachAsync(m => manufacturers.Add(m.ToDto()));
+        
+        return manufacturers;
     }
 
     [HttpGet("{id}")]
-    public async Task<ActionResult<Manufacturer>> GetById(ulong id)
+    public async Task<ActionResult<ManufacturerDto>> GetById(ulong id)
     {
-        Manufacturer manufacturer = _context.Manufacturers.FirstOrDefault(m => m.Id == id);
+        Manufacturer manufacturer = await _context.Manufacturers.FirstOrDefaultAsync(m => m.Id == id);
 
         if (manufacturer == null)
         {
             return NotFound();
         }
 
-        return manufacturer;
+        return manufacturer.ToDto();
     }
 }
