@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace maganzinchik.DAL.sneakers_shop;
+namespace maganzinchik.DAL.domain;
 
 public partial class SneakersPhoto
 {

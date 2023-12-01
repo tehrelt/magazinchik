@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using maganzinchik.DAL.domain;
 using Microsoft.EntityFrameworkCore;
 
-namespace maganzinchik.DAL.sneakers_shop;
+namespace maganzinchik.DAL;
 
 public partial class SneakersShopContext : DbContext
 {
