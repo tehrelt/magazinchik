@@ -20,7 +20,10 @@ public class ManufacturerController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<IEnumerable<ManufacturerDto>>> Get()
     {
-        return await _context.Manufacturers.Select(m => m.ToDto()).ToListAsync();
+        return await _context.Manufacturers
+            .Select(m => m.ToDto())
+            .OrderBy(m => m.Id)
+            .ToListAsync();
     }
 
     [HttpGet("{id}")]
@@ -37,7 +40,7 @@ public class ManufacturerController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult<ulong>> Create(ManufacturerDto dto)
+    public async Task<ActionResult<IdDto>> Create(ManufacturerDto dto)
     {
         Manufacturer manufacturer = new Manufacturer
         {
@@ -47,8 +50,8 @@ public class ManufacturerController : ControllerBase
         _context.Manufacturers.Add(manufacturer);
 
         await _context.SaveChangesAsync();
-        
-        return manufacturer.Id;
+
+        return new IdDto {Id = manufacturer.Id};
     }
 
     [HttpPut("{id}")]
@@ -83,6 +86,4 @@ public class ManufacturerController : ControllerBase
         
         return Ok();
     }
-    
-    
 }

@@ -13,7 +13,6 @@ public static class Converter
             Name = manufacturer.Name
         };
     }
-
     public static BrandDto ToDto(this Brand brand)
     {
         return new BrandDto
