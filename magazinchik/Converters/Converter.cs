@@ -50,4 +50,10 @@ public static class Converter
         ReleaseDate = s.ReleaseDate,
         Price = s.Price
     };
+    public static SneakersPhotoDto ToDto(this SneakersPhoto sp) => new SneakersPhotoDto
+    {
+        Id = sp.Id,
+        SneakerName = sp.Sneaker.Name,
+        PhotoUrl = sp.Photo.Url
+    };
 }
