@@ -32,12 +32,7 @@ namespace magazinchik.Controllers
         public async Task<ActionResult<ZipTypeDto>> Get(ulong id)
         {
             ZipType? zip = await _context.ZipTypes.FindAsync(id);
-            if (zip == null)
-            {
-                return NotFound();
-            }
-            
-            return zip.ToDto();
+            return zip != null ? zip.ToDto() : NotFound();
         }
 
         [HttpPost]

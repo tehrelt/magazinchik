@@ -45,17 +45,13 @@ public class BrandController : ControllerBase
     }
 
     [HttpGet("{id}")]
-    public async Task<ActionResult<BrandDto>> GetById(ulong id)
+    public async Task<ActionResult<BrandDto>> Get(ulong id)
     {
         Brand? brand = await _context.Brands
             .Include(b => b.Manufacturer)
             .FirstOrDefaultAsync(b => id == b.Id);
-        if (brand == null)
-        {
-            return NotFound();
-        }
 
-        return brand.ToDto();
+        return brand != null ? brand.ToDto() : NotFound();
     }
 
     [HttpPut("{id}")]

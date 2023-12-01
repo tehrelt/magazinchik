@@ -43,10 +43,10 @@ public class ClothController : ControllerBase
     }
 
     [HttpGet("{id}")]
-    public async Task<ActionResult<ClothDto>> GetById(ulong id)
+    public async Task<ActionResult<ClothDto>> Get(ulong id)
     {
         Cloth? cloth = await _context.Cloths.FindAsync(id);
-        return cloth == null ? NotFound() : cloth.ToDto();
+        return cloth != null ? cloth.ToDto() : NotFound();
     }
 
     [HttpPut("{id}")]

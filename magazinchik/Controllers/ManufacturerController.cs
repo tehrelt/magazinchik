@@ -42,16 +42,10 @@ public class ManufacturerController : ControllerBase
     }
 
     [HttpGet("{id}")]
-    public async Task<ActionResult<ManufacturerDto>> GetById(ulong id)
+    public async Task<ActionResult<ManufacturerDto>> Get(ulong id)
     {
         Manufacturer manufacturer = await _context.Manufacturers.FirstOrDefaultAsync(m => m.Id == id);
-
-        if (manufacturer == null)
-        {
-            return NotFound();
-        }
-
-        return manufacturer.ToDto();
+        return manufacturer != null ? manufacturer.ToDto() : NotFound();
     }
 
     [HttpPut("{id}")]
