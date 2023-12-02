@@ -4,7 +4,7 @@ using MySql.EntityFrameworkCore.Metadata;
 
 #nullable disable
 
-namespace maganzinchik.DAL.Migrations
+namespace magazinchik.DAL.Migrations
 {
     /// <inheritdoc />
     public partial class Initial : Migration

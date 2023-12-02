@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace maganzinchik.DAL.domain;
+namespace magazinchik.DAL.domain;
 
 public partial class ZipType
 {

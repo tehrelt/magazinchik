@@ -4,15 +4,15 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using maganzinchik.DAL;
+using magazinchik.DAL;
 
 #nullable disable
 
-namespace maganzinchik.DAL.Migrations
+namespace magazinchik.DAL.Migrations
 {
     [DbContext(typeof(SneakersShopContext))]
-    [Migration("20231201213750_MovePhotoUrlToSneakersPhoto")]
-    partial class MovePhotoUrlToSneakersPhoto
+    [Migration("20231201183847_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -22,7 +22,7 @@ namespace maganzinchik.DAL.Migrations
                 .HasAnnotation("ProductVersion", "7.0.0")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
-            modelBuilder.Entity("maganzinchik.DAL.domain.Brand", b =>
+            modelBuilder.Entity("magazinchik.DAL.domain.Brand", b =>
                 {
                     b.Property<ulong>("Id")
                         .ValueGeneratedOnAdd()
@@ -49,7 +49,7 @@ namespace maganzinchik.DAL.Migrations
                     b.ToTable("brand", (string)null);
                 });
 
-            modelBuilder.Entity("maganzinchik.DAL.domain.Cloth", b =>
+            modelBuilder.Entity("magazinchik.DAL.domain.Cloth", b =>
                 {
                     b.Property<ulong>("Id")
                         .ValueGeneratedOnAdd()
@@ -68,7 +68,7 @@ namespace maganzinchik.DAL.Migrations
                     b.ToTable("cloth", (string)null);
                 });
 
-            modelBuilder.Entity("maganzinchik.DAL.domain.Manufacturer", b =>
+            modelBuilder.Entity("magazinchik.DAL.domain.Manufacturer", b =>
                 {
                     b.Property<ulong>("Id")
                         .ValueGeneratedOnAdd()
@@ -87,7 +87,26 @@ namespace maganzinchik.DAL.Migrations
                     b.ToTable("manufacturer", (string)null);
                 });
 
-            modelBuilder.Entity("maganzinchik.DAL.domain.Sneaker", b =>
+            modelBuilder.Entity("magazinchik.DAL.domain.Photo", b =>
+                {
+                    b.Property<ulong>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint unsigned")
+                        .HasColumnName("id");
+
+                    b.Property<string>("Url")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("varchar(255)")
+                        .HasColumnName("url");
+
+                    b.HasKey("Id")
+                        .HasName("PRIMARY");
+
+                    b.ToTable("photo", (string)null);
+                });
+
+            modelBuilder.Entity("magazinchik.DAL.domain.Sneaker", b =>
                 {
                     b.Property<ulong>("Id")
                         .ValueGeneratedOnAdd()
@@ -117,7 +136,7 @@ namespace maganzinchik.DAL.Migrations
                         .HasColumnType("datetime")
                         .HasColumnName("release_date");
 
-                    b.Property<ulong>("SneakerSizeId")
+                    b.Property<ulong>("SnSizeType")
                         .HasColumnType("bigint unsigned")
                         .HasColumnName("sn_size_type");
 
@@ -136,14 +155,14 @@ namespace maganzinchik.DAL.Migrations
 
                     b.HasIndex(new[] { "ClothId" }, "cloth_id");
 
-                    b.HasIndex(new[] { "SneakerSizeId" }, "sn_size_type");
+                    b.HasIndex(new[] { "SnSizeType" }, "sn_size_type");
 
                     b.HasIndex(new[] { "ZipTypeId" }, "zip_type_id");
 
                     b.ToTable("sneaker", (string)null);
                 });
 
-            modelBuilder.Entity("maganzinchik.DAL.domain.SneakerSize", b =>
+            modelBuilder.Entity("magazinchik.DAL.domain.SneakerSize", b =>
                 {
                     b.Property<ulong>("Id")
                         .ValueGeneratedOnAdd()
@@ -168,17 +187,16 @@ namespace maganzinchik.DAL.Migrations
                     b.ToTable("sneaker_size", (string)null);
                 });
 
-            modelBuilder.Entity("maganzinchik.DAL.domain.SneakersPhoto", b =>
+            modelBuilder.Entity("magazinchik.DAL.domain.SneakersPhoto", b =>
                 {
                     b.Property<ulong>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bigint unsigned")
                         .HasColumnName("id");
 
-                    b.Property<string>("PhotoUrl")
-                        .IsRequired()
-                        .HasColumnType("longtext")
-                        .HasColumnName("photo_url");
+                    b.Property<ulong>("PhotoId")
+                        .HasColumnType("bigint unsigned")
+                        .HasColumnName("photo_id");
 
                     b.Property<ulong>("SneakerId")
                         .HasColumnType("bigint unsigned")
@@ -187,12 +205,14 @@ namespace maganzinchik.DAL.Migrations
                     b.HasKey("Id")
                         .HasName("PRIMARY");
 
+                    b.HasIndex(new[] { "PhotoId" }, "photo_id");
+
                     b.HasIndex(new[] { "SneakerId" }, "sneaker_id");
 
                     b.ToTable("sneakers_photo", (string)null);
                 });
 
-            modelBuilder.Entity("maganzinchik.DAL.domain.ZipType", b =>
+            modelBuilder.Entity("magazinchik.DAL.domain.ZipType", b =>
                 {
                     b.Property<ulong>("Id")
                         .ValueGeneratedOnAdd()
@@ -211,9 +231,9 @@ namespace maganzinchik.DAL.Migrations
                     b.ToTable("zip_type", (string)null);
                 });
 
-            modelBuilder.Entity("maganzinchik.DAL.domain.Brand", b =>
+            modelBuilder.Entity("magazinchik.DAL.domain.Brand", b =>
                 {
-                    b.HasOne("maganzinchik.DAL.domain.Manufacturer", "Manufacturer")
+                    b.HasOne("magazinchik.DAL.domain.Manufacturer", "Manufacturer")
                         .WithMany("Brands")
                         .HasForeignKey("ManufacturerId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -223,30 +243,30 @@ namespace maganzinchik.DAL.Migrations
                     b.Navigation("Manufacturer");
                 });
 
-            modelBuilder.Entity("maganzinchik.DAL.domain.Sneaker", b =>
+            modelBuilder.Entity("magazinchik.DAL.domain.Sneaker", b =>
                 {
-                    b.HasOne("maganzinchik.DAL.domain.Brand", "Brand")
+                    b.HasOne("magazinchik.DAL.domain.Brand", "Brand")
                         .WithMany("Sneakers")
                         .HasForeignKey("BrandId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("sneaker_ibfk_1");
 
-                    b.HasOne("maganzinchik.DAL.domain.Cloth", "Cloth")
+                    b.HasOne("magazinchik.DAL.domain.Cloth", "Cloth")
                         .WithMany("Sneakers")
                         .HasForeignKey("ClothId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("sneaker_ibfk_2");
 
-                    b.HasOne("maganzinchik.DAL.domain.SneakerSize", "SneakerSize")
+                    b.HasOne("magazinchik.DAL.domain.SneakerSize", "SnSizeTypeNavigation")
                         .WithMany("Sneakers")
-                        .HasForeignKey("SneakerSizeId")
+                        .HasForeignKey("SnSizeType")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("sneaker_ibfk_4");
 
-                    b.HasOne("maganzinchik.DAL.domain.ZipType", "ZipType")
+                    b.HasOne("magazinchik.DAL.domain.ZipType", "ZipType")
                         .WithMany("Sneakers")
                         .HasForeignKey("ZipTypeId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -257,49 +277,63 @@ namespace maganzinchik.DAL.Migrations
 
                     b.Navigation("Cloth");
 
-                    b.Navigation("SneakerSize");
+                    b.Navigation("SnSizeTypeNavigation");
 
                     b.Navigation("ZipType");
                 });
 
-            modelBuilder.Entity("maganzinchik.DAL.domain.SneakersPhoto", b =>
+            modelBuilder.Entity("magazinchik.DAL.domain.SneakersPhoto", b =>
                 {
-                    b.HasOne("maganzinchik.DAL.domain.Sneaker", "Sneaker")
+                    b.HasOne("magazinchik.DAL.domain.Photo", "Photo")
+                        .WithMany("SneakersPhotos")
+                        .HasForeignKey("PhotoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("sneakers_photo_ibfk_2");
+
+                    b.HasOne("magazinchik.DAL.domain.Sneaker", "Sneaker")
                         .WithMany("SneakersPhotos")
                         .HasForeignKey("SneakerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("sneakers_photo_ibfk_1");
 
+                    b.Navigation("Photo");
+
                     b.Navigation("Sneaker");
                 });
 
-            modelBuilder.Entity("maganzinchik.DAL.domain.Brand", b =>
+            modelBuilder.Entity("magazinchik.DAL.domain.Brand", b =>
                 {
                     b.Navigation("Sneakers");
                 });
 
-            modelBuilder.Entity("maganzinchik.DAL.domain.Cloth", b =>
+            modelBuilder.Entity("magazinchik.DAL.domain.Cloth", b =>
                 {
                     b.Navigation("Sneakers");
                 });
 
-            modelBuilder.Entity("maganzinchik.DAL.domain.Manufacturer", b =>
+            modelBuilder.Entity("magazinchik.DAL.domain.Manufacturer", b =>
                 {
                     b.Navigation("Brands");
                 });
 
-            modelBuilder.Entity("maganzinchik.DAL.domain.Sneaker", b =>
+            modelBuilder.Entity("magazinchik.DAL.domain.Photo", b =>
                 {
                     b.Navigation("SneakersPhotos");
                 });
 
-            modelBuilder.Entity("maganzinchik.DAL.domain.SneakerSize", b =>
+            modelBuilder.Entity("magazinchik.DAL.domain.Sneaker", b =>
+                {
+                    b.Navigation("SneakersPhotos");
+                });
+
+            modelBuilder.Entity("magazinchik.DAL.domain.SneakerSize", b =>
                 {
                     b.Navigation("Sneakers");
                 });
 
-            modelBuilder.Entity("maganzinchik.DAL.domain.ZipType", b =>
+            modelBuilder.Entity("magazinchik.DAL.domain.ZipType", b =>
                 {
                     b.Navigation("Sneakers");
                 });

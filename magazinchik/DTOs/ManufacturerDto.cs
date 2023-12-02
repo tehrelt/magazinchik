@@ -1,4 +1,4 @@
-using maganzinchik.DAL.domain;
+using magazinchik.DAL.domain;
 
 namespace magazinchik.DTOs;
 

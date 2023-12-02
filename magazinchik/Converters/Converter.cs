@@ -1,4 +1,4 @@
-using maganzinchik.DAL.domain;
+using magazinchik.DAL.domain;
 using magazinchik.DTOs;
 
 namespace magazinchik.Converters;
@@ -33,11 +33,11 @@ public static class Converter
         UsSize = s.UsSize,
         CmSize = s.CmSize
     };
-    public static PhotoDto ToDto(this Photo p) => new PhotoDto
-    {
-        Id = p.Id,
-        Url = p.Url 
-    };
+    // public static PhotoDto ToDto(this Photo p) => new PhotoDto
+    // {
+    //     Id = p.Id,
+    //     Url = p.Url 
+    // };
     public static SneakerDto ToDto(this Sneaker s) => new SneakerDto
     {
         Id = s.Id,
@@ -54,6 +54,6 @@ public static class Converter
     {
         Id = sp.Id,
         SneakerName = sp.Sneaker.Name,
-        PhotoUrl = sp.Photo.Url
+        PhotoUrl = sp.PhotoUrl
     };
 }

@@ -22,7 +22,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\maganzinchik.DAL\maganzinchik.DAL.csproj" />
+      <ProjectReference Include="..\magazinchik.DAL\magazinchik.DAL.csproj" />
     </ItemGroup>
 
 </Project>

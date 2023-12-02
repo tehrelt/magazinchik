@@ -2,7 +2,7 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "magazinchik", "magazinchik\magazinchik.csproj", "{C56D661E-E16C-495A-BA28-D2084AA3E889}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "maganzinchik.DAL", "maganzinchik.DAL\maganzinchik.DAL.csproj", "{2C445EE7-499A-4C7A-A373-23EA2839A167}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "magazinchik.DAL", "magazinchik.DAL\magazinchik.DAL.csproj", "{2C445EE7-499A-4C7A-A373-23EA2839A167}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

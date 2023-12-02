@@ -10,5 +10,5 @@ public class SneakersPhotoDto
 public class SneakersPhotoInputDto
 {
     public ulong SneakerId { get; set; }
-    public ulong PhotoId { get; set; } 
+    public string PhotoUrl { get; set; } 
 }

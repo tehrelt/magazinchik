@@ -1,5 +1,5 @@
-using maganzinchik.DAL;
-using maganzinchik.DAL.domain;
+using magazinchik.DAL;
+using magazinchik.DAL.domain;
 using magazinchik.Converters;
 using magazinchik.DTOs;
 using Microsoft.AspNetCore.Mvc;
