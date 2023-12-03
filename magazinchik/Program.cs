@@ -1,3 +1,5 @@
+using System.Net;
+using magazinchik.Configs;
 using magazinchik.DAL;
 using Microsoft.EntityFrameworkCore;
 
@@ -9,6 +11,10 @@ builder.Services.AddDbContext<SneakersShopContext>(
     )
 );
 
+ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11;
+
+builder.Services.AddOptions();
+builder.Services.Configure<MinioConfig>(builder.Configuration.GetSection("MinIO"));
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
