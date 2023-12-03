@@ -53,7 +53,6 @@ public static class Converter
     public static SneakersPhotoDto ToDto(this SneakersPhoto sp) => new SneakersPhotoDto
     {
         Id = sp.Id,
-        SneakerName = sp.Sneaker.Name,
-        PhotoUrl = sp.PhotoUrl
+        SneakerName = sp.Sneaker.Name
     };
 }

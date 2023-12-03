@@ -97,13 +97,48 @@ public class SneakersPhotoController : ControllerBase
     } 
     
     [HttpGet("{id}")]
-    public async Task<ActionResult> Get(ulong sneakerId, ulong id)
+    public async Task<ActionResult<SneakersPhotoDto>> Get(ulong sneakerId, ulong id)
     {
         if (await SneakerExists(sneakerId) == false) {
             return NotFound($"Sneaker#{sneakerId} wasn't found");
         }
         SneakersPhoto? photo = await _context.SneakersPhotos.FindAsync(id);
-        return photo != null ? Ok(photo.PhotoUrl) : NotFound();
+
+        if (photo == null)
+        {
+            return NotFound();
+        }
+
+        var dto = photo.ToDto();
+        using (var minio = new MinioClient()
+                   .WithEndpoint(_minioConfig.Endpoint)
+                   .WithCredentials(_minioConfig.AccessToken, _minioConfig.SecretToken)
+                   .WithSSL(false)
+                   .Build())
+        {
+            using (var memoryStream = new MemoryStream())
+            {
+                var goArgs = new GetObjectArgs()
+                    .WithBucket(_minioConfig.BucketName)
+                    .WithObject(photo.PhotoUrl)
+                    .WithCallbackStream((stream) =>
+                    {
+                        stream.CopyTo(memoryStream);
+                    });
+                try
+                {
+                    await minio.GetObjectAsync(goArgs);
+
+                    dto.PhotoBytes = Convert.ToBase64String(memoryStream.ToArray());
+                }
+                catch (Exception e)
+                {
+                    return BadRequest("error: " + e.Message);
+                }
+            }
+        }
+
+        return Ok(dto);
     }
 
     [HttpDelete("{id}")]
