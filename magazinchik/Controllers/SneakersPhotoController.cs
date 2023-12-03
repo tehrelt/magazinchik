@@ -86,7 +86,7 @@ public class SneakersPhotoController : ControllerBase
     {
         if (await SneakerExists(sneakerId) == false)
         {
-            return NotFound("Sneaker wasn't found");
+            return NotFound($"Sneaker#{sneakerId} wasn't found");
         }
 
         return await _context.SneakersPhotos
@@ -100,9 +100,57 @@ public class SneakersPhotoController : ControllerBase
     public async Task<ActionResult> Get(ulong sneakerId, ulong id)
     {
         if (await SneakerExists(sneakerId) == false) {
-            return NotFound("Sneaker wasn't found");
+            return NotFound($"Sneaker#{sneakerId} wasn't found");
         }
         SneakersPhoto? photo = await _context.SneakersPhotos.FindAsync(id);
         return photo != null ? Ok(photo.PhotoUrl) : NotFound();
+    }
+
+    [HttpDelete("{id}")]
+    public async Task<ActionResult> Delete(ulong sneakerId, ulong id)
+    {
+        if (await SneakerExists(sneakerId) == false)
+        {
+            return NotFound($"Sneaker#{sneakerId} wasn't found");
+        }
+
+        SneakersPhoto? photo = await _context.SneakersPhotos.FindAsync(id);
+        if (photo == null)
+        {
+            return NotFound($"Photo#{id} wasn't found");
+        }
+        
+        using (var minio = new MinioClient()
+                   .WithEndpoint(_minioConfig.Endpoint)
+                   .WithCredentials(_minioConfig.AccessToken, _minioConfig.SecretToken)
+                   .WithSSL(false)
+                   .Build())
+        {
+            try
+            {
+                var roArgs = new RemoveObjectArgs()
+                    .WithBucket(_minioConfig.BucketName)
+                    .WithObject(photo.PhotoUrl);
+                
+                await minio.RemoveObjectAsync(roArgs);
+            }
+            catch (AuthorizationException e)
+            {
+                return BadRequest("minio not authorized");
+            }
+            catch (BucketNotFoundException e)
+            {
+                return BadRequest($"bucket '{_minioConfig.BucketName}' wasn't found");
+            }
+            catch (Exception e)
+            {
+                return BadRequest($"Unexpected error at SneakersPhotoController {e.Message}");
+            }
+        }
+        
+        _context.SneakersPhotos.Remove(photo);
+        await _context.SaveChangesAsync();
+            
+        return Ok();
     }
 }
