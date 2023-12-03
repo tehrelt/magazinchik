@@ -89,11 +89,12 @@ public class SneakersPhotoController : ControllerBase
             return NotFound($"Sneaker#{sneakerId} wasn't found");
         }
 
-        return await _context.SneakersPhotos
-            .OrderBy (sp => sp.Id)
-            .Where   (sp => sp.SneakerId == sneakerId)
-            .Select  (sp => sp.ToDto())
-            .ToListAsync();
+        return Ok(new SneakersPhotosDto
+        {
+            SneakerId = sneakerId,
+            PhotosIds = _context.SneakersPhotos.Select(p => p.Id).ToArray(),
+            Count = _context.SneakersPhotos.Count()
+        });
     } 
     
     [HttpGet("{id}")]
