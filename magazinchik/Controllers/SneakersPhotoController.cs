@@ -89,9 +89,8 @@ public class SneakersPhotoController : ControllerBase
 
         return Ok(new SneakersPhotosDto
         {
-            SneakerId = sneakerId,
-            PhotosIds = _context.SneakersPhotos.Where(p => p.SneakerId == sneakerId).Select(p => p.Id).ToArray(),
-            Count = _context.SneakersPhotos.Where(p => p.SneakerId == sneakerId).Count()
+            Photos = _context.SneakersPhotos.Where(p => p.SneakerId == sneakerId).Select(p => $"http://{_minioConfig.Endpoint}/{_minioConfig.BucketName}/{p.PhotoUrl}").ToArray(),
+            Count = _context.SneakersPhotos.Count(p => p.SneakerId == sneakerId)
         });
     } 
     

@@ -9,7 +9,6 @@ public class SneakersPhotoDto
 
 public class SneakersPhotosDto
 {
-    public ulong SneakerId { get; set; }
-    public ulong[] PhotosIds { get; set; }
+    public string[] Photos { get; set; }
     public int Count { get; set; }
 }
