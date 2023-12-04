@@ -13,8 +13,3 @@ public class SneakersPhotosDto
     public ulong[] PhotosIds { get; set; }
     public int Count { get; set; }
 }
-
-public class SneakersPhotoInputDto
-{
-    public string PhotoString { get; set; }
-}

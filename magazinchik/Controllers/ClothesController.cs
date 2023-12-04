@@ -9,7 +9,7 @@ using NuGet.Protocol;
 namespace magazinchik.Controllers;
 
 [ApiController]
-[Route("api/v1/cloths")]
+[Route("api/v1/clothes")]
 public class ClothesController : ControllerBase
 {
     private readonly SneakersShopContext _context;

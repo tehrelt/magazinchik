@@ -35,8 +35,18 @@ public class BrandsController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<BrandDto>>> Get()
+    public async Task<ActionResult<IEnumerable<BrandDto>>> Get([FromQuery(Name = "manufacturer_id")] uint manufacturerId = 0)
     {
+        if (manufacturerId > 0)
+        {
+            return await _context.Brands
+                .Include(b => b.Manufacturer)
+                .OrderBy(b => b.Id)
+                .Where(b => b.ManufacturerId == manufacturerId)
+                .Select(b => b.ToDto())
+                .ToListAsync();
+        }
+        
         return await _context.Brands
                 .Include(b => b.Manufacturer)
                 .OrderBy(b => b.Id)
@@ -45,7 +55,7 @@ public class BrandsController : ControllerBase
     }
 
     [HttpGet("{id}")]
-    public async Task<ActionResult<BrandDto>> Get(ulong id)
+    public async Task<ActionResult<BrandDto>> Get([FromRoute] ulong id)
     {
         Brand? brand = await _context.Brands
             .Include(b => b.Manufacturer)

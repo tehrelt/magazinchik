@@ -3,7 +3,6 @@ using magazinchik.DAL;
 using magazinchik.DAL.domain;
 using magazinchik.DTOs;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Minio;
 using Minio.DataModel.Args;
@@ -24,17 +23,17 @@ public class SneakersPhotoController : ControllerBase
     }
 
     private async Task<bool> SneakerExists(ulong id) => await _context.Sneakers.FindAsync(id) != null;
-    
+
     [HttpPost]
-    public async Task<ActionResult> Post([FromRoute] ulong sneakerId, 
-                                         [FromBody]  SneakersPhotoInputDto dto)
+    public async Task<ActionResult> Post([FromRoute] ulong sneakerId,
+                                         [FromForm]  IFormFile file) 
     {
         if (await SneakerExists(sneakerId) == false)
         {
             return BadRequest($"Sneaker#{sneakerId} wasn't found");
         }
         
-        var objectName = System.Guid.NewGuid();
+        var objectName = Guid.NewGuid() + Path.GetExtension(file.FileName);
         using (var minio = new MinioClient()
                    .WithEndpoint(_minioConfig.Endpoint)
                    .WithCredentials(_minioConfig.AccessToken, _minioConfig.SecretToken)
@@ -43,14 +42,12 @@ public class SneakersPhotoController : ControllerBase
         {
             try
             {
-                var bytes = Convert.FromBase64String(dto.PhotoString);
-                
                 var putObjectArgs = new PutObjectArgs()
                     .WithBucket(_minioConfig.BucketName)
                     .WithObject(objectName.ToString())
-                    .WithStreamData(new MemoryStream(bytes))
-                    .WithObjectSize(bytes.Length)
-                    .WithContentType("application/octet-stream");
+                    .WithStreamData(file.OpenReadStream())
+                    .WithObjectSize(file.Length)
+                    .WithContentType(file.ContentType);
                 
                 await minio.PutObjectAsync(putObjectArgs);
             }
@@ -71,14 +68,14 @@ public class SneakersPhotoController : ControllerBase
         var photo = new SneakersPhoto
         {
             SneakerId = sneakerId,
-            PhotoUrl = objectName.ToString()
+            PhotoUrl = objectName
         };
         
         _context.SneakersPhotos.Add(photo);
         
         await _context.SaveChangesAsync();
 
-        return Ok(photo.Id);
+        return Created($"api/v1/sneakers/{sneakerId}/photos/{photo.Id}", photo.Id);
     }
 
     [HttpGet]
