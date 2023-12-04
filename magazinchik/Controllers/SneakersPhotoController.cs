@@ -3,6 +3,7 @@ using magazinchik.DAL;
 using magazinchik.DAL.domain;
 using magazinchik.DTOs;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Minio;
 using Minio.DataModel.Args;
@@ -89,8 +90,8 @@ public class SneakersPhotoController : ControllerBase
         return Ok(new SneakersPhotosDto
         {
             SneakerId = sneakerId,
-            PhotosIds = _context.SneakersPhotos.Select(p => p.Id).ToArray(),
-            Count = _context.SneakersPhotos.Count()
+            PhotosIds = _context.SneakersPhotos.Where(p => p.SneakerId == sneakerId).Select(p => p.Id).ToArray(),
+            Count = _context.SneakersPhotos.Where(p => p.SneakerId == sneakerId).Count()
         });
     } 
     
@@ -100,41 +101,16 @@ public class SneakersPhotoController : ControllerBase
         if (await SneakerExists(sneakerId) == false) {
             return NotFound($"Sneaker#{sneakerId} wasn't found");
         }
-        SneakersPhoto? photo = await _context.SneakersPhotos.FindAsync(id);
+        SneakersPhoto? photo = await _context.SneakersPhotos
+            .Include(p => p.Sneaker)
+            .FirstOrDefaultAsync(p => p.Id == id);
 
         if (photo == null)
         {
-            return NotFound();
+            return NotFound($"Photo#{id} wasn't found");
         }
 
-        var dto = photo.ToDto();
-        using (var minio = new MinioClient()
-                   .WithEndpoint(_minioConfig.Endpoint)
-                   .WithCredentials(_minioConfig.AccessToken, _minioConfig.SecretToken)
-                   .WithSSL(false)
-                   .Build())
-        {
-            using (var memoryStream = new MemoryStream())
-            {
-                var goArgs = new GetObjectArgs()
-                    .WithBucket(_minioConfig.BucketName)
-                    .WithObject(photo.PhotoUrl)
-                    .WithCallbackStream((stream) =>
-                    {
-                        stream.CopyTo(memoryStream);
-                    });
-                try
-                {
-                    await minio.GetObjectAsync(goArgs);
-
-                    dto.PhotoBytes = Convert.ToBase64String(memoryStream.ToArray());
-                }
-                catch (Exception e)
-                {
-                    return BadRequest("error: " + e.Message);
-                }
-            }
-        }
+        var dto = photo.ToDto($"http://{_minioConfig.Endpoint}/{_minioConfig.BucketName}/{photo.PhotoUrl}");
 
         return Ok(dto);
     }
