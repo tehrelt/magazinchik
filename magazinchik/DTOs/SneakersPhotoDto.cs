@@ -9,6 +9,6 @@ public class SneakersPhotoDto
 
 public class SneakersPhotosDto
 {
-    public string[] Photos { get; set; }
+    public PhotoDto[] Photos { get; set; }
     public int Count { get; set; }
 }

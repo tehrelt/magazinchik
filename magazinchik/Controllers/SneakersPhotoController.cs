@@ -89,13 +89,18 @@ public class SneakersPhotoController : ControllerBase
 
         return Ok(new SneakersPhotosDto
         {
-            Photos = _context.SneakersPhotos.Where(p => p.SneakerId == sneakerId).Select(p => $"http://{_minioConfig.Endpoint}/{_minioConfig.BucketName}/{p.PhotoUrl}").ToArray(),
-            Count = _context.SneakersPhotos.Count(p => p.SneakerId == sneakerId)
+            Photos = _context.SneakersPhotos
+                .Where(p => p.SneakerId == sneakerId)
+                .Select(p => p.ToPhotoDto($"http://{_minioConfig.Endpoint}/{_minioConfig.BucketName}/{p.PhotoUrl}"))
+                .ToArray(),
+            
+            Count = _context.SneakersPhotos
+                .Count(p => p.SneakerId == sneakerId)
         });
     } 
     
     [HttpGet("{id}")]
-    public async Task<ActionResult<SneakersPhotoDto>> Get(ulong sneakerId, ulong id)
+    public async Task<ActionResult<PhotoDto>> Get(ulong sneakerId, ulong id)
     {
         if (await SneakerExists(sneakerId) == false) {
             return NotFound($"Sneaker#{sneakerId} wasn't found");
@@ -109,7 +114,7 @@ public class SneakersPhotoController : ControllerBase
             return NotFound($"Photo#{id} wasn't found");
         }
 
-        var dto = photo.ToDto($"http://{_minioConfig.Endpoint}/{_minioConfig.BucketName}/{photo.PhotoUrl}");
+        var dto = photo.ToPhotoDto($"http://{_minioConfig.Endpoint}/{_minioConfig.BucketName}/{photo.PhotoUrl}");
 
         return Ok(dto);
     }

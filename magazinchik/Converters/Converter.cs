@@ -56,4 +56,11 @@ public static class Converter
         SneakerName = sp.Sneaker.Name,
         PhotoUrl = url
     };
+
+    public static PhotoDto ToPhotoDto(this SneakersPhoto sp, string url) => new PhotoDto
+    {
+        Id = sp.Id,
+        Url = url
+    };
+
 }
