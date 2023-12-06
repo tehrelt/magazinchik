@@ -26,4 +26,8 @@
       <ProjectReference Include="..\magazinchik.DAL\magazinchik.DAL.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Repositories\Test\" />
+    </ItemGroup>
+
 </Project>

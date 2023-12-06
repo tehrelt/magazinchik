@@ -1,6 +1,10 @@
 using System.Net;
 using magazinchik.Configs;
 using magazinchik.DAL;
+using magazinchik.Repositories.Interfaces;
+using magazinchik.Repositories.MySQL;
+using magazinchik.Services;
+using magazinchik.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -18,6 +22,10 @@ builder.Services.Configure<MinioConfig>(builder.Configuration.GetSection("MinIO"
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddTransient<IManufacturerRepository, ManufacturerMySql>();
+
+builder.Services.AddTransient<IManufacturerService, ManufacturerService>();
 
 var app = builder.Build();
 
